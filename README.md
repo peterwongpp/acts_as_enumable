@@ -1,4 +1,4 @@
-# ActsAsEnumable
+# ActsAsEnumable [![Build Status](https://secure.travis-ci.org/peterwongpp/acts_as_enumable.png)](http://travis-ci.org/peterwongpp/acts_as_enumable)
 
 Provide Enum functionality for Active Record.
 
