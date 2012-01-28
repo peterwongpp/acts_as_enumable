@@ -73,9 +73,13 @@ user.role
 ## Todo
 
 * ActiveRecord scope support
-  (eg. `User.having_roles_of(["admin", "staff"]) or User.having_status_of("active")`)
+  * `User.having_roles_of(["admin", "staff"])`
+  * `User.having_status_of("active")`
+  * ...
 * Shorthand checking
-  (eg. `user.admin? or user.has_status?("active") or user.in_roles?(["admin", "staff"])`)
+  * `user.admin?`
+  * `user.has_status?("active")`
+  * `user.in_roles?(["admin", "staff"])`
 * Code refactoring
 
 ## Development
