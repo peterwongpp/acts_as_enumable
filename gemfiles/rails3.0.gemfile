@@ -2,5 +2,5 @@ source 'http://rubygems.org'
 
 gem 'rails', '~> 3.0'
 gem 'acts_as_enumable', path: '../'
-
-gemspec path: '../'
+gem 'supermodel'
+gem 'rspec'
