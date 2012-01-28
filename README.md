@@ -69,6 +69,15 @@ user.role_enum = 0
 user.role
 # "admin"
 ```
+
+## Todo
+
+* ActiveRecord scope support
+  (eg. `User.having_roles_of(["admin", "staff"]) or User.having_status_of("active")`)
+* Shorthand checking
+  (eg. `user.admin? or user.has_status?("active") or user.in_roles?(["admin", "staff"])`)
+* Code refactoring
+
 ## Development
 
 If you have any problems, please post them on the [issue tracker](https://github.com/peterwongpp/acts_as_enumable/issues).
