@@ -89,4 +89,18 @@ describe ActsAsEnumable::ModelAdditions do
     user.status_enum.should == 1
     user.status.should == "inactive"
   end
+
+  it "convert value to symbol" do
+    user = User.new
+
+    user.value_of_role(:admin).should == 0
+    user.value_of_status(:inactive).should == 1
+  end
+
+  it "convert symbol to value" do
+    user = User.new
+
+    user.symbol_of_role(1).should == "staff"
+    user.symbol_of_status(0).should == "active"
+  end
 end

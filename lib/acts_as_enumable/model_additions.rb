@@ -78,14 +78,22 @@ module ActsAsEnumable
         end
       }
 
-      define_method attribute_name do
-        index = send("#{attribute_name}_enum")
-        return nil if index.nil?
-        self.class.send(attribute.pluralize)[index]
+      define_method "value_of_#{attribute}" do |symbol|
+        self.class.send(attribute.pluralize).index(symbol.to_s)
       end
-      define_method "#{attribute_name}=" do |value|
-        value_index = self.class.send(attribute.pluralize).index(value.to_s)
-        send("#{attribute_name}_enum=", value_index)
+
+      define_method "symbol_of_#{attribute}" do |value|
+        self.class.send(attribute.pluralize)[value]
+      end
+
+      define_method attribute_name do
+        value = send("#{attribute_name}_enum")
+        return nil if value.nil?
+        self.class.send(attribute.pluralize)[value]
+      end
+      define_method "#{attribute_name}=" do |symbol|
+        value = self.send("value_of_#{attribute}", symbol)
+        send("#{attribute_name}_enum=", value)
       end
 
       define_method "#{attribute_name}_enum" do
