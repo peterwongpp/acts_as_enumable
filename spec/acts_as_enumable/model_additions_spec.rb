@@ -16,8 +16,12 @@ end
 
 describe ActsAsEnumable::ModelAdditions do
   it "creates a constant given the attribute name and values" do
-    User::ROLES.should == %w(admin staff helper member)
-    User::STATUSES.should == %w(active inactive)
+    User.roles.should == %w(admin staff helper member)
+    User.statuses.should == %w(active inactive)
+  end
+
+  it "is a testing function..." do
+    User.roles.should == %w(admin staff helper member)
   end
 
   it "returns an array to be used for select" do

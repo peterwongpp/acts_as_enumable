@@ -40,7 +40,7 @@ This enables the following methods:
 ``` ruby
 user = User.first
     
-User::ROLES
+User.roles
 # ["admin", "staff", "helper", "member"]
     
 User.roles_for_select("users.roles")

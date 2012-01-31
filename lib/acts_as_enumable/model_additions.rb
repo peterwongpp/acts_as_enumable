@@ -20,7 +20,7 @@ module ActsAsEnumable
     # This enables the following methods:
     #
     #   user = User.first
-    #   User::ROLES
+    #   User.roles
     #   # ["admin", "staff", "helper", "member"]
     #
     #   User.roles_for_select("users.roles")
@@ -49,35 +49,42 @@ module ActsAsEnumable
     #   user.role
     #   # "admin"
     def acts_as_enumable(attribute_name, enum_values, options={})
-      const_set(attribute_name.to_s.pluralize.upcase, enum_values)
+      attribute = attribute_name.to_s
+      options[:default] ||= nil
 
-      class_eval <<-EOF
-def self.#{attribute_name.to_s.pluralize}_for_select(i18n_namespace)
-  #{attribute_name.to_s.pluralize.upcase}.map do |value|
-    { key: value, value: I18n.t("\#{i18n_namespace}.\#{value}") }
-  end
-end
-EOF
+      class_eval %Q{
+        def self.#{attribute.pluralize}
+          #{enum_values}
+        end
+      }
 
-      class_eval <<-EOF
-def self.default_#{attribute_name}
-  #{options[:default].nil? ? "nil" : "\"#{options[:default]}\""}
-end
-EOF
+      class_eval %Q{
+        def self.#{attribute.pluralize}_for_select(i18n_namespace)
+          #{attribute.pluralize}.map do |value|
+            { key: value, value: I18n.t("\#{i18n_namespace}.\#{value}") }
+          end
+        end
+      }
 
-      class_eval <<-EOF
-def self.default_#{attribute_name}_enum
-  #{attribute_name.to_s.pluralize.upcase}.index(self.default_#{attribute_name})
-end
-EOF
+      class_eval %Q{
+        def self.default_#{attribute}
+          #{options[:default].nil? ? "nil" : "\"#{options[:default]}\""}
+        end
+      }
+
+      class_eval %Q{
+        def self.default_#{attribute}_enum
+          #{attribute.pluralize}.index(default_#{attribute})
+        end
+      }
 
       define_method attribute_name do
         index = send("#{attribute_name}_enum")
         return nil if index.nil?
-        self.class.const_get(attribute_name.to_s.pluralize.upcase)[index]
+        self.class.send(attribute.pluralize)[index]
       end
       define_method "#{attribute_name}=" do |value|
-        value_index = self.class.const_get(attribute_name.to_s.pluralize.upcase).index(value.to_s)
+        value_index = self.class.send(attribute.pluralize).index(value.to_s)
         send("#{attribute_name}_enum=", value_index)
       end
 
@@ -85,7 +92,7 @@ EOF
         read_attribute(:"#{attribute_name}_enum") || self.class.send("default_#{attribute_name}_enum")
       end
       define_method "#{attribute_name}_enum=" do |value_index|
-        counts = self.class.const_get(attribute_name.to_s.pluralize.upcase).count
+        counts = self.class.send(attribute.pluralize).count
         value_index = (0...counts).include?(value_index) ? value_index : self.class.send("default_#{attribute_name}_enum")
         write_attribute(:"#{attribute_name}_enum", value_index)
       end
